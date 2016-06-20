@@ -9,7 +9,7 @@ public class Shoot {
 	public float x, y, h, w;
 	
 	public Shoot(float x, float y){
-		w = GameParams.screenY/1200;
+		w = GameParams.screenY/500;
 		h = w*2;
 		
 		this.x = x + w/2;
@@ -23,6 +23,6 @@ public class Shoot {
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 		if(y>0)
-			y--;
+			y = y-2;
 	}
 }

@@ -12,6 +12,8 @@ public class Menu extends BasicGameState{
 	int i = 0;
 	int x, y;
 	
+	long time, deltaTime;
+	
 	List<Shoot> shoots;
 	
 	boolean canShoot = true;
@@ -21,11 +23,12 @@ public class Menu extends BasicGameState{
 
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException {
-		x = GameParams.screenX/3;
-		y = GameParams.screenY/3;
+		x = (int) GameParams.mapScreenX(50);
+		y = (int) GameParams.mapScreenY(50);
 		Keyboard.enableRepeatEvents(false);
 		
 		shoots = Collections.synchronizedList(new ArrayList<Shoot>());
+		time = System.currentTimeMillis();
 	}
 	
 
@@ -45,7 +48,6 @@ public class Menu extends BasicGameState{
 			}
 			checkShoots();
 			
-			System.out.println("Size: "+shoots.size());
 	}
 	
 	private void getInput(){
@@ -66,7 +68,11 @@ public class Menu extends BasicGameState{
 				x += GameParams.screenY/500;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-			shoots.add(new Shoot(x+GameParams.screenX/200,y));
+			deltaTime = System.currentTimeMillis() - time;
+			if(deltaTime > GameParams.shootRate){
+				time = System.currentTimeMillis();
+				shoots.add(new Shoot(x+GameParams.screenX/200,y));
+			}		
 		}
 	}
 

@@ -9,6 +9,20 @@ public final class GameParams {
 	public static final int 	screenX		= 1280;
 	public static final int 	screenY		= 720;
 	
+	public static final int		shootRate	= 200;
 	//public static float	factor;
-
+	
+	public static float mapScreenY(int value){
+		if((value>=0)&&(value<=100))
+			return screenY/100 * value;
+		else 
+			return -1;
+	}
+	
+	public static float mapScreenX(int value){
+		if((value>=0)&&(value<=100))
+			return screenX/100 * value;
+		else 
+			return -1;
+	}
 }
