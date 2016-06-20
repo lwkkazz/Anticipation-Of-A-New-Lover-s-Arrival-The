@@ -14,6 +14,8 @@ public class Menu extends BasicGameState{
 	
 	long time, deltaTime;
 	
+	Asteroid astro;
+	
 	List<Shoot> shoots;
 	
 	boolean canShoot = true;
@@ -25,17 +27,21 @@ public class Menu extends BasicGameState{
 	public void init(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException {
 		x = (int) GameParams.mapScreenX(50);
 		y = (int) GameParams.mapScreenY(50);
+		
 		Keyboard.enableRepeatEvents(false);
 		
+		astro = new Asteroid();
 		shoots = Collections.synchronizedList(new ArrayList<Shoot>());
 		time = System.currentTimeMillis();
 	}
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
-		graph.drawRect(x, y, GameParams.screenX/100, GameParams.screenX/100);
+		graph.drawOval(x, y, GameParams.screenX/100, GameParams.screenX/50);
 		for(Shoot tiro:shoots)
 			tiro.render(gameContainer, sbGame, graph);
+		
+		astro.render(gameContainer, sbGame, graph);
 	}
 
 	@Override
@@ -45,8 +51,8 @@ public class Menu extends BasicGameState{
 				if(tiro.y>0)
 					tiro.update(gameContainer, sbGame, delta);
 			}
+			astro.update(gameContainer, sbGame, delta);
 			checkShoots();
-			
 	}
 	
 	private void getInput(){

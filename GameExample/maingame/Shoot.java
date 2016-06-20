@@ -4,7 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class Shoot {
+public class Shoot extends GameObject {
 	
 	public float x, y, h, w;
 	
