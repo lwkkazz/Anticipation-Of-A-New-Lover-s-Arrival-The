@@ -30,7 +30,6 @@ public class Menu extends BasicGameState{
 		shoots = Collections.synchronizedList(new ArrayList<Shoot>());
 		time = System.currentTimeMillis();
 	}
-	
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
