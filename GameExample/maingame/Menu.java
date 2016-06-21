@@ -14,7 +14,7 @@ public class Menu extends BasicGameState{
 	
 	long time, deltaTime;
 	
-	Asteroid astro;
+	List<Asteroid> astro;
 	
 	List<Shoot> shoots;
 	
@@ -30,7 +30,6 @@ public class Menu extends BasicGameState{
 		
 		Keyboard.enableRepeatEvents(false);
 		
-		astro = new Asteroid();
 		shoots = Collections.synchronizedList(new ArrayList<Shoot>());
 		time = System.currentTimeMillis();
 	}
@@ -40,19 +39,21 @@ public class Menu extends BasicGameState{
 		graph.drawOval(x, y, GameParams.screenX/100, GameParams.screenX/50);
 		for(Shoot tiro:shoots)
 			tiro.render(gameContainer, sbGame, graph);
-		
-		astro.render(gameContainer, sbGame, graph);
+		for(Asteroid aero:astro)
+			aero.render(gameContainer, sbGame, graph);
 	}
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
-			getInput();
-			for(Shoot tiro:shoots){
-				if(tiro.y>0)
-					tiro.update(gameContainer, sbGame, delta);
-			}
-			astro.update(gameContainer, sbGame, delta);
-			checkShoots();
+		getInput();
+		for(Shoot tiro:shoots){
+			if(tiro.y>0)
+				tiro.update(gameContainer, sbGame, delta);
+		}
+		for(Asteroid aero:astro)
+			aero.update(gameContainer, sbGame, delta);
+		
+		performRemoves();
 	}
 	
 	private void getInput(){
@@ -81,7 +82,7 @@ public class Menu extends BasicGameState{
 		}
 	}
 
-	private void checkShoots(){
+	private void performRemoves(){
 		synchronized(shoots){
 			Iterator<Shoot> i = shoots.iterator();
 			while(i.hasNext()){
@@ -91,6 +92,18 @@ public class Menu extends BasicGameState{
 				}
 			}
 		}
+		
+		synchronized(astro){
+			Iterator<Asteroid> i = astro.iterator();
+			while(i.hasNext()){
+				Asteroid aero =  i.next();
+				if(aero.y>=GameParams.screenY){
+					i.remove();
+				}
+			}
+		}
+		
+		
 	}
 	
 	@Override

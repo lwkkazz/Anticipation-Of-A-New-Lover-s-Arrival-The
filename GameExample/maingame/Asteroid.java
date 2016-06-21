@@ -1,5 +1,7 @@
 package maingame;
 
+import java.util.Random;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
@@ -8,11 +10,14 @@ public class Asteroid extends GameObject {
 
 	int x,y,h,w;
 	
+	Random rng;
+	
 	public Asteroid(){
+		rng = new Random();
 		
-		double rand = Math.random();
+		int rand = rng.nextInt(100);
 		y = 0;
-		x = (int) GameParams.mapScreenX((int) rand*100);
+		x = (int) GameParams.mapScreenX(rand);
 		System.out.println("Random: "+rand+"|Mapped: "+x);
 		h = GameParams.screenY/100;
 		w = h;

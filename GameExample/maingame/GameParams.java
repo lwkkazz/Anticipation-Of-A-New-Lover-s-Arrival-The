@@ -20,6 +20,8 @@ public final class GameParams {
 	}
 	
 	public static float mapScreenX(int value){
+		System.out.println("Received: "+value+"|Returning: "+screenX/100 * value);
+
 		if((value>=0)&&(value<=100))
 			return screenX/100 * value;
 		else 
