@@ -39,8 +39,8 @@ public class Menu extends BasicGameState{
 		graph.drawOval(x, y, GameParams.screenX/100, GameParams.screenX/50);
 		for(Shoot tiro:shoots)
 			tiro.render(gameContainer, sbGame, graph);
-		for(Asteroid aero:astro)
-			aero.render(gameContainer, sbGame, graph);
+		//for(Asteroid aero:astro)
+			//aero.render(gameContainer, sbGame, graph);
 	}
 
 	@Override
@@ -50,8 +50,8 @@ public class Menu extends BasicGameState{
 			if(tiro.y>0)
 				tiro.update(gameContainer, sbGame, delta);
 		}
-		for(Asteroid aero:astro)
-			aero.update(gameContainer, sbGame, delta);
+		//for(Asteroid aero:astro)
+			//aero.update(gameContainer, sbGame, delta);
 		
 		performRemoves();
 	}
@@ -92,7 +92,7 @@ public class Menu extends BasicGameState{
 				}
 			}
 		}
-		
+		/*
 		synchronized(astro){
 			Iterator<Asteroid> i = astro.iterator();
 			while(i.hasNext()){
@@ -101,7 +101,7 @@ public class Menu extends BasicGameState{
 					i.remove();
 				}
 			}
-		}
+		}*/
 		
 		
 	}
