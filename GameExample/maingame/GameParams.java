@@ -10,6 +10,8 @@ public final class GameParams {
 	public static final int 	screenY		= 720;
 	
 	public static final int		shootRate	= 200;
+	
+	public static final int		moveSpeed	= GameParams.screenY/500;
 	//public static float	factor;
 	
 	public static float mapScreenY(int value){
