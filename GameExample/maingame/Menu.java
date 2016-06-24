@@ -11,7 +11,7 @@ public class Menu extends BasicGameState{
 
 	int i = 0;
 	
-	long time, deltaTime;
+	long time, deltaTime, astroTime, astroMark;
 	
 	List<Asteroid> astro;
 	List<Shoot> shoots;
@@ -29,8 +29,9 @@ public class Menu extends BasicGameState{
 		player = new Player((int) GameParams.mapScreenX(50), (int) GameParams.mapScreenX(50));
 		Keyboard.enableRepeatEvents(false);
 		
-		shoots = Collections.synchronizedList(new ArrayList<Shoot>());
-		time = System.currentTimeMillis();
+		shoots	= Collections.synchronizedList(new ArrayList<Shoot>());
+		astro	= Collections.synchronizedList(new ArrayList<Asteroid>());
+		astroMark = time = System.currentTimeMillis();
 	}
 
 	@Override
@@ -38,8 +39,8 @@ public class Menu extends BasicGameState{
 		player.render(gameContainer, sbGame, graph);
 		for(Shoot tiro:shoots)
 			tiro.render(gameContainer, sbGame, graph);
-		//for(Asteroid aero:astro)
-			//aero.render(gameContainer, sbGame, graph);
+		for(Asteroid aero:astro)
+			aero.render(gameContainer, sbGame, graph);
 	}
 
 	@Override
@@ -51,14 +52,19 @@ public class Menu extends BasicGameState{
 				tiro.update(gameContainer, sbGame, delta);
 		}
 		
-		//for(Asteroid aero:astro)
-			//aero.update(gameContainer, sbGame, delta);
+		for(Asteroid aero:astro)
+			aero.update(gameContainer, sbGame, delta);
 		
 		performRemoves();
 	}
 	
 	private void generateAstros() {
-		// TODO Auto-generated method stub
+		astroTime = System.currentTimeMillis() - astroMark;
+		
+		if(astroTime > 500){
+			astroMark = System.currentTimeMillis();
+			astro.add(new Asteroid());
+		}
 		
 	}
 
@@ -94,7 +100,7 @@ public class Menu extends BasicGameState{
 				}
 			}
 		}
-		/*
+		
 		synchronized(astro){
 			Iterator<Asteroid> i = astro.iterator();
 			while(i.hasNext()){
@@ -103,9 +109,7 @@ public class Menu extends BasicGameState{
 					i.remove();
 				}
 			}
-		}*/
-		
-		
+		}	
 	}
 	
 	@Override
