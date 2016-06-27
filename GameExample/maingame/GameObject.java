@@ -16,5 +16,9 @@ public abstract class GameObject {
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 	}
+	
+	public void boundBox(){
+		
+	}
 		
 }

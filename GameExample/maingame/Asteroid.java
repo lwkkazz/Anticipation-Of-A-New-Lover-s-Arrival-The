@@ -14,7 +14,6 @@ public class Asteroid extends GameObject {
 	
 	public Asteroid(){
 		rng = new Random();
-		
 		int rand = rng.nextInt(100);
 		y = 0;
 		x = (int) GameParams.mapScreenX(rand);
