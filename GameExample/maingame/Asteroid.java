@@ -4,13 +4,18 @@ import java.util.Random;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class Asteroid extends GameObject {
 
-	int x,y,h,w;
+	private int x,y,h,w;
 	
-	Random rng;
+	private Random rng;
+	
+	private boolean isValid;
+	
+	private Rectangle boundBox;
 	
 	public Asteroid(){
 		rng = new Random();
@@ -19,8 +24,9 @@ public class Asteroid extends GameObject {
 		x = (int) GameParams.mapScreenX(rand);
 		h = GameParams.screenY/10;
 		w = h;
-	}
-	
+		boundBox = new Rectangle(x,y,w,h);
+		isValid = true;
+	}	
 
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph){
 		graph.drawOval(x, y, w, h);
@@ -29,6 +35,19 @@ public class Asteroid extends GameObject {
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 		if(y<GameParams.screenY)
 			y ++;
+		boundBox = new Rectangle(x,y,w,h);
 	}
 	
+	public Rectangle getBox(){
+		return boundBox;
+	}
+	
+
+	public void setIsValid(boolean value){
+		isValid = value;
+	}
+	
+	public boolean isValid(){
+		return isValid;
+	}
 }

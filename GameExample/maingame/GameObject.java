@@ -2,6 +2,7 @@ package maingame;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
 public abstract class GameObject {
@@ -17,8 +18,13 @@ public abstract class GameObject {
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 	}
 	
-	public void boundBox(){
-		
+	public Rectangle getBox(){
+		return null;
 	}
-		
+	
+	public void setIsValid(boolean value){
+	}		
+	public boolean isValid(){
+		return false;
+	}
 }

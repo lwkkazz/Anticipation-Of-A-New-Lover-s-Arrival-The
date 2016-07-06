@@ -1,116 +1,75 @@
 package maingame;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.*;
-import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-import java.util.*;
+import org.lwjgl.input.Mouse;
+
+
 //@lwkkazz
 public class Menu extends BasicGameState{
-
-	int i = 0;
 	
-	long time, deltaTime, astroTime, astroMark;
+	private Rectangle start, exit;
 	
-	List<Asteroid> astro;
-	List<Shoot> shoots;
+	private Image titleText;
 	
-	Player player;
-	
-	boolean canShoot = true;
+	private int mX, mY;
+		
+	private int mouseEvent;
 	
 	public Menu(int state){
 	}
 
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException {
-
-		player = new Player((int) GameParams.mapScreenX(50), (int) GameParams.mapScreenX(50));
-		Keyboard.enableRepeatEvents(false);
 		
-		shoots	= Collections.synchronizedList(new ArrayList<Shoot>());
-		astro	= Collections.synchronizedList(new ArrayList<Asteroid>());
-		astroMark = time = System.currentTimeMillis();
+		start	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(50),(GameParams.screenY/10)*2,GameParams.screenY/20);
+		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
+
+		titleText = new Image("/res/titletext.png");
 	}
+	
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
-		player.render(gameContainer, sbGame, graph);
-		for(Shoot tiro:shoots)
-			tiro.render(gameContainer, sbGame, graph);
-		for(Asteroid aero:astro)
-			aero.render(gameContainer, sbGame, graph);
+
+		graph.drawImage(titleText, GameParams.mapScreenX(48), GameParams.mapScreenY(30));
+		graph.draw(start);
+		graph.drawString("Start Game!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
+		graph.draw(exit);
+		graph.drawString("Exit", GameParams.mapScreenX(52), GameParams.mapScreenY(61));
+
+		
+		graph.drawString("X: "+mX+"| Y: "+mY, GameParams.mapScreenX(10), GameParams.mapScreenY(10));
 	}
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
-		getInput();
-		generateAstros();
-		for(Shoot tiro:shoots){
-			if(tiro.y>0)
-				tiro.update(gameContainer, sbGame, delta);
+		mouseEvent = Mouse.getEventButton();
+
+		mX = Mouse.getX();
+		mY = GameParams.screenY-Mouse.getY();
+		
+		checkClick(sbGame);
+	}
+
+	public void checkClick(StateBasedGame sbGame){		
+		if(start.contains(mX, mY)){
+			if(mouseEvent != -1){
+				if(mouseEvent==0){
+					sbGame.enterState(GameParams.play);
+				}
+			}
+		}if(exit.contains(mX, mY)){
+			if(mouseEvent != -1){
+				if(mouseEvent==0){
+					System.exit(0);
+				}
+			}
 		}
-		
-		for(Asteroid aero:astro)
-			aero.update(gameContainer, sbGame, delta);
-		
-		performRemoves();
 	}
 	
-	private void generateAstros() {
-		astroTime = System.currentTimeMillis() - astroMark;
-		
-		if(astroTime > 500){
-			astroMark = System.currentTimeMillis();
-			astro.add(new Asteroid());
-		}
-		
-	}
-
-	private void getInput(){
-		if(Keyboard.isKeyDown(Keyboard.KEY_UP)){				
-			player.move(Keyboard.KEY_UP);
-		}	
-		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){				
-			player.move(Keyboard.KEY_DOWN);
-		}		
-		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
-			player.move(Keyboard.KEY_LEFT);
-		}				
-		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-			player.move(Keyboard.KEY_RIGHT);
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-			deltaTime = System.currentTimeMillis() - time;
-			if(deltaTime > GameParams.shootRate){
-				time = System.currentTimeMillis();
-				shoots.add(new Shoot(player.getX()+GameParams.screenX/200,player.getY()));
-			}		
-		}
-	}
-
-	private void performRemoves(){
-		synchronized(shoots){
-			Iterator<Shoot> i = shoots.iterator();
-			while(i.hasNext()){
-				Shoot tiro =  i.next();
-				if(tiro.y<=0){
-					i.remove();
-				}
-			}
-		}
-		
-		synchronized(astro){
-			Iterator<Asteroid> i = astro.iterator();
-			while(i.hasNext()){
-				Asteroid aero =  i.next();
-				if(aero.y>=GameParams.screenY){
-					i.remove();
-				}
-			}
-		}	
-	}
 	
 	@Override
 	public int getID() {
