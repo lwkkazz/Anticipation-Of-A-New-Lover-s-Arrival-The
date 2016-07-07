@@ -64,7 +64,7 @@ public class Play extends BasicGameState{
 			}
 			
 			if(GameParams.trigger(player, aero)){
-				gameContainer.exit();
+				sbGame.enterState(GameParams.menu);
 			}
 			
 			
