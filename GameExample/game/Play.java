@@ -1,4 +1,4 @@
-package maingame;
+package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,20 +11,13 @@ import org.newdawn.slick.state.*;
 
 public class Play extends BasicGameState{
 
+	private long time, deltaTime, astroTime, astroMark;
 	
+	private List<Asteroid> astro;
+	private List<Shoot> shoots;
 	
-
-	int i = 0;
-	
-	long time, deltaTime, astroTime, astroMark;
-	
-	List<Asteroid> astro;
-	List<Shoot> shoots;
-	
-	Player player;
-	
-	boolean canShoot = true;
-	
+	private Player player;
+		
 	public Play(int state){
 	}
 

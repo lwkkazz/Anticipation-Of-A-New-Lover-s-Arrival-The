@@ -1,4 +1,4 @@
-package maingame;
+package game;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;

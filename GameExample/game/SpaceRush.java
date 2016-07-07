@@ -1,11 +1,11 @@
-package maingame;
+package game;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
-public class GameExample extends StateBasedGame {
+public class SpaceRush extends StateBasedGame {
 
-	public GameExample(String gameName) {
+	public SpaceRush(String gameName) {
 		super(gameName);
 		this.addState(new Menu(GameParams.menu));
 		this.addState(new Play(GameParams.play));
@@ -16,7 +16,7 @@ public class GameExample extends StateBasedGame {
 		AppGameContainer appGameContainer;
 		
 		try{
-			appGameContainer = new AppGameContainer(new GameExample(GameParams.gameName));
+			appGameContainer = new AppGameContainer(new SpaceRush(GameParams.gameName));
 			appGameContainer.setDisplayMode(GameParams.screenX, GameParams.screenY, false);
 			appGameContainer.start();
 		}catch(SlickException err){
