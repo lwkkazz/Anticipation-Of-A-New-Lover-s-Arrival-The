@@ -58,6 +58,7 @@ public class Menu extends BasicGameState{
 		if(start.contains(mX, mY)){
 			if(mouseEvent != -1){
 				if(mouseEvent==0){
+					Mouse.setCursorPosition(0, GameParams.screenY);
 					sbGame.enterState(GameParams.play);
 				}
 			}

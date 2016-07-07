@@ -3,7 +3,7 @@ package game;
 import org.newdawn.slick.geom.Rectangle;
 
 public final class GameParams {
-	public static final String	gameName 	= "Vector Combat ";
+	public static final String	gameName 	= "Space Rush!";
 	
 	public static final int		menu		= 0;
 	public static final int 	play		= 1;

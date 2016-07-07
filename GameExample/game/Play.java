@@ -57,7 +57,7 @@ public class Play extends BasicGameState{
 			}
 			
 			if(GameParams.trigger(player, aero)){
-				sbGame.enterState(GameParams.menu);
+				sbGame. closeRequested();// nterState(GameParams.menu);
 			}
 			
 			
