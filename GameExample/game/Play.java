@@ -11,6 +11,8 @@ import org.newdawn.slick.state.*;
 
 public class Play extends BasicGameState{
 
+	private int cont=0;
+	
 	private long time, deltaTime, astroTime, astroMark;
 	
 	private List<Asteroid> astro;
@@ -50,16 +52,15 @@ public class Play extends BasicGameState{
 		player.update(gameContainer, sbGame, delta);
 		
 		for(Asteroid aero:astro){
-			if(aero.getBox().getY()<=GameParams.screenY){
+			if(aero.getBox().getY()<=GameParams.screenY-1){
 				aero.update(gameContainer, sbGame, delta);
 			}else{
 				aero.setIsValid(false);
 			}
 			
 			if(GameParams.trigger(player, aero)){
-				sbGame. closeRequested();// nterState(GameParams.menu);
+				sbGame.enterState(GameParams.menu);
 			}
-			
 			
 			for(Shoot tiro:shoots){
 		
@@ -74,6 +75,7 @@ public class Play extends BasicGameState{
 					aero.setIsValid(false);
 				}
 			}
+			
 		}
 		performRemoves();
 	}
@@ -81,9 +83,12 @@ public class Play extends BasicGameState{
 	private void generateAstros() {
 		astroTime = System.currentTimeMillis() - astroMark;
 		
-		if(astroTime > 500){
+		if(astroTime > 100){
 			astroMark = System.currentTimeMillis();
-			astro.add(new Asteroid());
+			astro.add(new Asteroid(cont));
+			cont+=30;
+			if(cont > GameParams.screenX)
+				cont = 0;
 		}
 		
 	}
@@ -105,7 +110,7 @@ public class Play extends BasicGameState{
 			deltaTime = System.currentTimeMillis() - time;
 			if(deltaTime > GameParams.shootRate){
 				time = System.currentTimeMillis();
-				shoots.add(new Shoot(player.getX()+GameParams.screenX/200,player.getY()));
+				shoots.add(new Shoot(player.getX()-player.getBox().getWidth()/2+GameParams.screenX/200,player.getY()));
 			}		
 		}
 	}

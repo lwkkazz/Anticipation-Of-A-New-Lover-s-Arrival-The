@@ -27,6 +27,15 @@ public class Asteroid extends GameObject {
 		boundBox = new Rectangle(x,y,w,h);
 		isValid = true;
 	}	
+	
+	public Asteroid(int x){
+		y=0;
+		this.x = x;
+		h = GameParams.screenY/10;
+		w = h;
+		boundBox = new Rectangle(x, y, h, w);
+		isValid = true;
+	}
 
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph){
 		graph.drawOval(x, y, w, h);

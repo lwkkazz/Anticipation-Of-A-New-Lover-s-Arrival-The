@@ -36,7 +36,7 @@ public class Player extends GameObject {
 	public void move(int dir){
 		switch(dir){
 			case Keyboard.KEY_UP:
-				if(y>0)
+				if(y>GameParams.screenY/2)
 					y -= GameParams.moveSpeed;
 				break;
 				

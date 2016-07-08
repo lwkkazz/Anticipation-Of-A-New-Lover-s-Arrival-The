@@ -11,11 +11,13 @@ public class Shoot extends GameObject {
 	
 	private Rectangle boundBox;
 	
+	private int cont = 0;
+	
 	private boolean isValid;
 	
 	public Shoot(float x, float y){
-		w = GameParams.screenY/500;
-		h = w*2;
+		w = GameParams.screenY/100;
+		h = w;
 		
 		this.x = x + w/2;
 		this.y = y + h;
@@ -27,12 +29,19 @@ public class Shoot extends GameObject {
 	
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph){
 		graph.drawRect(x, y, w, h);
+		graph.fill(boundBox);
 	}
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
-		if(y>0)
-			y = y-2;
+		if(y>0 && cont==0){
+			y --;
+			cont = 0;
+		}
 		boundBox = new Rectangle(x,y,h,w);
+		cont++;
+		if(cont==4)
+			cont=0;
+		//System.out.println(cont);
 	}
 	
 	public Rectangle getBox(){
