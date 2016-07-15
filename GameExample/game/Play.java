@@ -9,17 +9,24 @@ import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
+import levels.LevelOne;
+
 public class Play extends BasicGameState{
 
 	private int cont=0;
 	
 	private long time, deltaTime, astroTime, astroMark;
 	
+	private LevelOne lvl;
+	
 	private List<Asteroid> astro;
 	private List<Shoot> shoots;
 	
 	private Player player;
 		
+	
+	int valor =0;
+	
 	public Play(int state){
 	}
 
@@ -32,6 +39,8 @@ public class Play extends BasicGameState{
 		shoots	= Collections.synchronizedList(new ArrayList<Shoot>());
 		astro	= Collections.synchronizedList(new ArrayList<Asteroid>());
 		astroMark = time = System.currentTimeMillis();
+		
+		lvl = new LevelOne();
 	}
 
 	@Override
@@ -80,15 +89,24 @@ public class Play extends BasicGameState{
 		performRemoves();
 	}
 	
+	//TODO
 	private void generateAstros() {
 		astroTime = System.currentTimeMillis() - astroMark;
 		
-		if(astroTime > 100){
+		if(astroTime > 500){
 			astroMark = System.currentTimeMillis();
-			astro.add(new Asteroid(cont));
-			cont+=30;
-			if(cont > GameParams.screenX)
+			int[][] temp = lvl.getLevel();
+			
+			if(cont>=temp.length)
 				cont = 0;
+			
+			for(int i=0; i < temp[cont].length; i ++){
+				if(temp[cont][i]==1)
+					astro.add(new Asteroid(i*2.3));
+			}
+			
+			cont++;
+			//valor++;
 		}
 		
 	}

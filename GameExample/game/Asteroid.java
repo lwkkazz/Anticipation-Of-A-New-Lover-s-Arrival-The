@@ -28,12 +28,12 @@ public class Asteroid extends GameObject {
 		isValid = true;
 	}	
 	
-	public Asteroid(int x){
+	public Asteroid(double x){
 		y=0;
-		this.x = x;
+		this.x =(int) GameParams.mapScreenX((float)x);
 		h = GameParams.screenY/10;
 		w = h;
-		boundBox = new Rectangle(x, y, h, w);
+		boundBox = new Rectangle(this.x, y, h, w);
 		isValid = true;
 	}
 
@@ -45,6 +45,7 @@ public class Asteroid extends GameObject {
 		if(y<GameParams.screenY)
 			y ++;
 		boundBox = new Rectangle(x,y,w,h);
+		//System.out.println("Astro created at: "+x);
 	}
 	
 	public Rectangle getBox(){

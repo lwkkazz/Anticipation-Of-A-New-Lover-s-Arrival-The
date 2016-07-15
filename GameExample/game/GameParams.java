@@ -22,9 +22,10 @@ public final class GameParams {
 			return -1;
 	}
 	
-	public static float mapScreenX(int value){
+	public static float mapScreenX(float value){
 		if((value>=0)&&(value<=100))
 			return screenX/100 * value;
+		
 		else 
 			return -1;
 	}
