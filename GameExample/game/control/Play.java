@@ -1,4 +1,4 @@
-package game;
+package game.control;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,10 @@ import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
-import levels.LevelOne;
+import game.levels.LevelOne;
+import game.objects.Asteroid;
+import game.objects.Player;
+import game.objects.Shoot;
 
 public class Play extends BasicGameState{
 

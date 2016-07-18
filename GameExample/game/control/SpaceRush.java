@@ -1,4 +1,4 @@
-package game;
+package game.control;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;

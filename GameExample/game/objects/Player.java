@@ -1,10 +1,12 @@
-package game;
+package game.objects;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
+
+import game.control.GameParams;
 
 public class Player extends GameObject {
 

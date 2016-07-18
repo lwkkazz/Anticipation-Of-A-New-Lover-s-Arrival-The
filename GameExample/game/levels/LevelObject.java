@@ -1,4 +1,4 @@
-package levels;
+package game.levels;
 
 public class LevelObject {
 

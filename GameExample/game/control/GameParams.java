@@ -1,6 +1,8 @@
-package game;
+package game.control;
 
 import org.newdawn.slick.geom.Rectangle;
+
+import game.objects.GameObject;
 
 public final class GameParams {
 	public static final String	gameName 	= "Space Rush!";
