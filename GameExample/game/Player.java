@@ -8,7 +8,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Player extends GameObject {
 
-	private int x, y, w, h;
+	private int x, y, w, h, delta;
 	
 	private Rectangle boundBox;
 	
@@ -30,6 +30,7 @@ public class Player extends GameObject {
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 		boundBox = new Rectangle(x,y,w,h);
+		this.delta = delta;
 	}
 
 	
@@ -37,22 +38,22 @@ public class Player extends GameObject {
 		switch(dir){
 			case Keyboard.KEY_UP:
 				if(y>GameParams.screenY/2)
-					y -= GameParams.moveSpeed;
+					y -= GameParams.moveSpeed*delta;
 				break;
 				
 			case Keyboard.KEY_DOWN:
 				if(y<GameParams.screenY-h)
-					y += GameParams.moveSpeed;
+					y += GameParams.moveSpeed*delta;
 				break;
 				
 			case Keyboard.KEY_LEFT:
 				if(x>0)
-					x -= GameParams.moveSpeed;
+					x -= GameParams.moveSpeed*delta;
 				break;
 				
 			case Keyboard.KEY_RIGHT:
 				if(x<GameParams.screenX-w)
-					x += GameParams.moveSpeed;
+					x += GameParams.moveSpeed*delta;
 				break;
 	
 		}

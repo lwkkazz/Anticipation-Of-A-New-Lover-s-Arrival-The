@@ -11,14 +11,14 @@ public class Asteroid extends GameObject {
 
 	private int x,y,h,w;
 	
-	private Random rng;
+	private Random rng = new Random();
 	
 	private boolean isValid;
 	
 	private Rectangle boundBox;
 	
 	public Asteroid(){
-		rng = new Random();
+		//rng 
 		int rand = rng.nextInt(100);
 		y = 0;
 		x = (int) GameParams.mapScreenX(rand);
@@ -26,11 +26,12 @@ public class Asteroid extends GameObject {
 		w = h;
 		boundBox = new Rectangle(x,y,w,h);
 		isValid = true;
+		
 	}	
 	
 	public Asteroid(double x){
 		y=0;
-		this.x =(int) GameParams.mapScreenX((float)x);
+		this.x =(int) GameParams.mapScreenX((float)x+(rng.nextInt(30)-15));
 		h = GameParams.screenY/10;
 		w = h;
 		boundBox = new Rectangle(this.x, y, h, w);
@@ -43,9 +44,16 @@ public class Asteroid extends GameObject {
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 		if(y<GameParams.screenY)
-			y ++;
+			y += rng.nextInt(2)*delta;
+		if((x>=0-w)&&(x<GameParams.screenX))
+			if(rng.nextBoolean()){
+				x++;
+			}else{
+				x--;
+			}
+		
 		boundBox = new Rectangle(x,y,w,h);
-		//System.out.println("Astro created at: "+x);
+		
 	}
 	
 	public Rectangle getBox(){

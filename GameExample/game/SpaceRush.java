@@ -19,6 +19,9 @@ public class SpaceRush extends StateBasedGame {
 			appGameContainer = new AppGameContainer(new SpaceRush(GameParams.gameName));
 			appGameContainer.setDisplayMode(GameParams.screenX, GameParams.screenY, false);
 			appGameContainer.start();
+			appGameContainer.setVSync(true);
+			appGameContainer.setTargetFrameRate(60);
+			appGameContainer.setMaximumLogicUpdateInterval(10);
 		}catch(SlickException err){
 			err.printStackTrace();
 		}		

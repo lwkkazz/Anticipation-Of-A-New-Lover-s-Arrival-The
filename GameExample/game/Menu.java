@@ -28,6 +28,7 @@ public class Menu extends BasicGameState{
 		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
 
 		titleText = new Image("/res/titletext.png");
+		Mouse.updateCursor();
 	}
 	
 
@@ -56,18 +57,18 @@ public class Menu extends BasicGameState{
 
 	public void checkClick(StateBasedGame sbGame){		
 		if(start.contains(mX, mY)){
-			if(mouseEvent != -1){
+			//if(mouseEvent != -1){
 				if(mouseEvent==0){
-					Mouse.setCursorPosition(0, GameParams.screenY);
 					sbGame.enterState(GameParams.play);
+					Mouse.setCursorPosition(0, GameParams.screenY);
 				}
-			}
+			//}
 		}if(exit.contains(mX, mY)){
-			if(mouseEvent != -1){
+			//if(mouseEvent != -1){
 				if(mouseEvent==0){
 					System.exit(0);
 				}
-			}
+			//}
 		}
 	}
 	

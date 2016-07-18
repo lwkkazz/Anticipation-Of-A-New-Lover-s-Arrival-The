@@ -11,8 +11,13 @@ public final class GameParams {
 	public static final int 	screenX		= 1280;
 	public static final int 	screenY		= 720;
 	
-	public static final int		shootRate	= 200;
+	public static final int		shootRate	= 500;
+	public static final int		shootSpeed	= 2; //Less is faster
 	
+	public static final int		bossTime	= 6000;
+
+	public static final int		spawnRate	= 400;
+
 	public static final int		moveSpeed	= GameParams.screenY/500;
 	
 	public static float mapScreenY(int value){

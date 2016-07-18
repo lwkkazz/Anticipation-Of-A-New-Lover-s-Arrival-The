@@ -15,7 +15,7 @@ public class Play extends BasicGameState{
 
 	private int cont=0;
 	
-	private long time, deltaTime, astroTime, astroMark;
+	private long time, deltaTime, astroTime, astroMark, bossTimer;
 	
 	private LevelOne lvl;
 	
@@ -41,6 +41,7 @@ public class Play extends BasicGameState{
 		astroMark = time = System.currentTimeMillis();
 		
 		lvl = new LevelOne();
+		bossTimer = System.currentTimeMillis();
 	}
 
 	@Override
@@ -56,11 +57,17 @@ public class Play extends BasicGameState{
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
 		getInput();
-		generateAstros();
+		
+		if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
+			generateAstros();
+		}else{
+			//TODO callBossRoutine();
+		}
 		
 		player.update(gameContainer, sbGame, delta);
 		
 		for(Asteroid aero:astro){
+			System.out.println(delta);
 			if(aero.getBox().getY()<=GameParams.screenY-1){
 				aero.update(gameContainer, sbGame, delta);
 			}else{
@@ -68,24 +75,27 @@ public class Play extends BasicGameState{
 			}
 			
 			if(GameParams.trigger(player, aero)){
-				sbGame.enterState(GameParams.menu);
+				//System.exit(0);
+				//sbGame.enterState(GameParams.menu);
 			}
-			
-			for(Shoot tiro:shoots){
+		}
 		
-				if(tiro.getBox().getY()>0){
-					tiro.update(gameContainer, sbGame, delta);
-				}else{
-					tiro.setIsValid(false);
-				}			
-			
-				if(GameParams.trigger(tiro, aero)){
-					tiro.setIsValid(false);
-					aero.setIsValid(false);
+			for(Shoot tiro:shoots){
+					if(tiro.getBox().getY()>0){
+						tiro.update(gameContainer, sbGame, delta);
+					}else{
+						tiro.setIsValid(false);
+					}			
+				for(Asteroid aero:astro){
+
+					if(GameParams.trigger(tiro, aero)){
+						tiro.setIsValid(false);
+						aero.setIsValid(false);
+					}
 				}
 			}
 			
-		}
+		
 		performRemoves();
 	}
 	
@@ -93,7 +103,7 @@ public class Play extends BasicGameState{
 	private void generateAstros() {
 		astroTime = System.currentTimeMillis() - astroMark;
 		
-		if(astroTime > 500){
+		if(astroTime > GameParams.spawnRate){
 			astroMark = System.currentTimeMillis();
 			int[][] temp = lvl.getLevel();
 			
@@ -102,11 +112,9 @@ public class Play extends BasicGameState{
 			
 			for(int i=0; i < temp[cont].length; i ++){
 				if(temp[cont][i]==1)
-					astro.add(new Asteroid(i*2.3));
+					astro.add(new Asteroid(i*10));
 			}
-			
 			cont++;
-			//valor++;
 		}
 		
 	}
@@ -123,6 +131,9 @@ public class Play extends BasicGameState{
 		}				
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
 			player.move(Keyboard.KEY_RIGHT);
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+			System.exit(0);
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
 			deltaTime = System.currentTimeMillis() - time;

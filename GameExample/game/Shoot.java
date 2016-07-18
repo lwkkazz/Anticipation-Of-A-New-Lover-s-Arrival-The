@@ -39,7 +39,7 @@ public class Shoot extends GameObject {
 		}
 		boundBox = new Rectangle(x,y,h,w);
 		cont++;
-		if(cont==4)
+		if(cont==GameParams.shootSpeed)
 			cont=0;
 		//System.out.println(cont);
 	}
