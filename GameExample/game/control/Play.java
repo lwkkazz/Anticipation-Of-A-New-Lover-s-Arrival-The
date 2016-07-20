@@ -11,6 +11,7 @@ import org.newdawn.slick.state.*;
 
 import game.levels.LevelOne;
 import game.objects.Asteroid;
+import game.objects.Enemy;
 import game.objects.Player;
 import game.objects.Shoot;
 
@@ -27,8 +28,11 @@ public class Play extends BasicGameState{
 	
 	private Player player;
 		
+	private Enemy boss;
 	
 	int valor =0;
+
+	private boolean bossFight=true;
 	
 	public Play(int state){
 	}
@@ -51,6 +55,9 @@ public class Play extends BasicGameState{
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
 		player.render(gameContainer, sbGame, graph);
 		
+		if(boss!=null)
+			boss.render(gameContainer, sbGame, graph);
+		
 		for(Shoot tiro:shoots)
 			tiro.render(gameContainer, sbGame, graph);
 		for(Asteroid aero:astro)
@@ -59,18 +66,31 @@ public class Play extends BasicGameState{
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
+		
 		getInput();
 		
 		if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
 			generateAstros();
 		}else{
-			//TODO callBossRoutine();
+			while(bossFight){
+			boss = new Enemy();
+			bossFight = false;
+			}
 		}
-		
+
 		player.update(gameContainer, sbGame, delta);
 		
+		if(boss!=null)
+			boss.update(gameContainer, sbGame, delta);
+		
+		checkCollisions(gameContainer, sbGame, delta);
+		
+		performRemoves();
+	}
+	
+	private void checkCollisions(GameContainer gameContainer, StateBasedGame sbGame, int delta) {
+
 		for(Asteroid aero:astro){
-			System.out.println(delta);
 			if(aero.getBox().getY()<=GameParams.screenY-1){
 				aero.update(gameContainer, sbGame, delta);
 			}else{
@@ -97,12 +117,9 @@ public class Play extends BasicGameState{
 					}
 				}
 			}
-			
 		
-		performRemoves();
 	}
-	
-	//TODO
+
 	private void generateAstros() {
 		astroTime = System.currentTimeMillis() - astroMark;
 		
@@ -168,6 +185,7 @@ public class Play extends BasicGameState{
 			}
 		}	
 	}
+	
 	@Override
 	public int getID() {
 		return 1;

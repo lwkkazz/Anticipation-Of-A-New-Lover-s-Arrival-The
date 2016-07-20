@@ -16,7 +16,7 @@ public final class GameParams {
 	public static final int		shootRate	= 500;
 	public static final int		shootSpeed	= 2; //Less is faster
 	
-	public static final int		bossTime	= 7000;
+	public static final int		bossTime	= 3000;
 
 	public static final int		spawnRate	= 400;
 
