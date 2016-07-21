@@ -16,6 +16,8 @@ public class Shoot extends GameObject {
 	private int cont = 0;
 	
 	private boolean isValid;
+
+	private boolean enemy;
 	
 	public Shoot(float x, float y){
 		w = GameParams.screenY/100;
@@ -29,6 +31,18 @@ public class Shoot extends GameObject {
 		isValid = true;
 	}
 	
+	public Shoot(float x, float y, boolean isEnemy){
+		w = GameParams.screenY/100;
+		h = w;
+		
+		this.x = x + w/2;
+		this.y = y + h;
+		
+		boundBox = new Rectangle(x,y,h,w);
+		enemy = isEnemy;
+		isValid = true;
+	}
+	
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph){
 		graph.drawRect(x, y, w, h);
 		graph.fill(boundBox);
@@ -36,12 +50,19 @@ public class Shoot extends GameObject {
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta){
 		if(y>0 && cont==0){
-			y --;
+			if(enemy){
+				y++;
+			}else
+				y --;
+			
 			cont = 0;
 		}
 		boundBox = new Rectangle(x,y,h,w);
 		cont++;
-		if(cont==GameParams.shootSpeed)
+		if(enemy){
+			if (cont==1)
+				cont = 0;
+		}else if(cont==GameParams.shootSpeed)
 			cont=0;
 		//System.out.println(cont);
 	}

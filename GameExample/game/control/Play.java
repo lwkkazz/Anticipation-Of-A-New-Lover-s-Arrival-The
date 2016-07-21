@@ -25,6 +25,8 @@ public class Play extends BasicGameState{
 	
 	private List<Asteroid> astro;
 	private List<Shoot> shoots;
+	private List<Shoot> bossShoots;
+
 	
 	private Player player;
 		
@@ -33,6 +35,10 @@ public class Play extends BasicGameState{
 	int valor =0;
 
 	private boolean bossFight=true;
+
+	private long bossDeltaTime;
+
+	private long bossShotTimer;
 	
 	public Play(int state){
 	}
@@ -43,9 +49,11 @@ public class Play extends BasicGameState{
 		player = new Player((int) GameParams.mapScreenX(50), (int) GameParams.mapScreenX(50));
 		Keyboard.enableRepeatEvents(false);
 		
-		shoots	= Collections.synchronizedList(new ArrayList<Shoot>());
-		astro	= Collections.synchronizedList(new ArrayList<Asteroid>());
-		astroMark = time = System.currentTimeMillis();
+		shoots		= Collections.synchronizedList(new ArrayList<Shoot>());
+		astro		= Collections.synchronizedList(new ArrayList<Asteroid>());
+		bossShoots	= Collections.synchronizedList(new ArrayList<Shoot>());
+
+		bossDeltaTime = astroMark = time = System.currentTimeMillis();
 		
 		lvl = new LevelOne();
 		bossTimer = System.currentTimeMillis();
@@ -55,9 +63,12 @@ public class Play extends BasicGameState{
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
 		player.render(gameContainer, sbGame, graph);
 		
-		if(boss!=null)
+		if(boss!=null){
 			boss.render(gameContainer, sbGame, graph);
 		
+		for(Shoot tiro:bossShoots)
+			tiro.render(gameContainer, sbGame, graph);
+		}
 		for(Shoot tiro:shoots)
 			tiro.render(gameContainer, sbGame, graph);
 		for(Asteroid aero:astro)
@@ -66,9 +77,7 @@ public class Play extends BasicGameState{
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
-		
-		getInput();
-		
+				
 		if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
 			generateAstros();
 		}else{
@@ -80,16 +89,31 @@ public class Play extends BasicGameState{
 
 		player.update(gameContainer, sbGame, delta);
 		
-		if(boss!=null)
-			boss.update(gameContainer, sbGame, delta);
-		
+		if(boss!=null){
+			boss.update(gameContainer, sbGame, delta, player);
+			bossShots();
+		}
+		getInput();
 		checkCollisions(gameContainer, sbGame, delta);
-		
 		performRemoves();
 	}
 	
+	private void bossShots() {
+		bossShotTimer = System.currentTimeMillis() - bossDeltaTime;
+		if(bossShotTimer > 300){
+			bossDeltaTime = System.currentTimeMillis();
+			
+			bossShoots.add(boss.getShoot());
+		}
+			
+	}
+
 	private void checkCollisions(GameContainer gameContainer, StateBasedGame sbGame, int delta) {
 
+		for(Shoot tiro:bossShoots){
+			tiro.update(gameContainer, sbGame, delta);
+		}
+		
 		for(Asteroid aero:astro){
 			if(aero.getBox().getY()<=GameParams.screenY-1){
 				aero.update(gameContainer, sbGame, delta);
