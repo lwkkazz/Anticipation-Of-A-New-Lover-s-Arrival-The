@@ -28,14 +28,14 @@ public class Menu extends BasicGameState{
 		start	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(50),(GameParams.screenY/10)*2,GameParams.screenY/20);
 		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
 
-		titleText = new Image("/res/titletext.png");
+		titleText = new Image("/res/title_text.png");
 	}
 	
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
 
-		graph.drawString("Space Rush", GameParams.mapScreenX(48), GameParams.mapScreenY(30));
+		graph.drawImage(titleText, GameParams.mapScreenX(33), GameParams.mapScreenY(30));
 		graph.draw(start);
 		graph.drawString("Start Game!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
 		graph.draw(exit);

@@ -39,6 +39,8 @@ public class Play extends BasicGameState{
 	private long bossDeltaTime;
 
 	private long bossShotTimer;
+
+	private boolean astroImune = false;
 	
 	public Play(int state){
 	}
@@ -95,7 +97,7 @@ public class Play extends BasicGameState{
 			boss.update(gameContainer, sbGame, delta, player);
 			bossShots();
 		}
-		getInput();
+		getInput(gameContainer, sbGame);
 		checkCollisions(gameContainer, sbGame, delta);
 		performRemoves();
 	}
@@ -117,9 +119,8 @@ public class Play extends BasicGameState{
 			}else{
 				tiro.setIsValid(false);
 			}
-			
 			if(GameParams.trigger(player, tiro)){
-				
+				//Check for boss shoots on player
 				bossTimer = System.currentTimeMillis();
 				boss = null;
 				sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
@@ -136,12 +137,13 @@ public class Play extends BasicGameState{
 			}
 			
 			if(GameParams.trigger(player, aero)){
-				
-				bossTimer = System.currentTimeMillis();
-				boss = null;
-				sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
-				sbGame.enterState(GameParams.gameOver);
-				
+				//Check for asteroid hits on player
+				if(!astroImune ){
+					bossTimer = System.currentTimeMillis();
+					boss = null;
+					sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
+					sbGame.enterState(GameParams.gameOver);
+				}
 			}
 		}
 		
@@ -158,8 +160,15 @@ public class Play extends BasicGameState{
 						aero.setIsValid(false);
 					}
 				}
-			}
-		
+				if(!(boss==null)){
+					if(GameParams.trigger(tiro, boss)){
+						//Check for player shoots on boss
+						tiro.setIsValid(false);
+						boss.onHit();
+						System.out.println("HIT! Life remaining "+boss.getLife());
+					}
+				}
+			}		
 	}
 
 	private void generateAstros() {
@@ -181,7 +190,7 @@ public class Play extends BasicGameState{
 		
 	}
 
-	private void getInput(){
+	private void getInput(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException{
 		if(Keyboard.isKeyDown(Keyboard.KEY_UP)){				
 			player.move(Keyboard.KEY_UP);
 		}	
@@ -194,9 +203,16 @@ public class Play extends BasicGameState{
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
 			player.move(Keyboard.KEY_RIGHT);
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-			System.exit(0);
+		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+				astroImune=true;
 		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+			bossTimer = System.currentTimeMillis();
+			boss = null;
+			sbGame.getState(GameParams.menu).init(gameContainer, sbGame);
+			sbGame.enterState(GameParams.menu);		
+		}
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
 			deltaTime = System.currentTimeMillis() - time;
 			if(deltaTime > GameParams.shootRate){
@@ -237,6 +253,11 @@ public class Play extends BasicGameState{
 			}
 		}
 		
+		if(!(boss==null)){
+			if(!boss.isValid()){
+				boss=null;
+			}
+		}
 	}
 	
 	@Override

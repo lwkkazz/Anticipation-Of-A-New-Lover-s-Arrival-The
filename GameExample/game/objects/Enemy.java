@@ -22,6 +22,8 @@ public class Enemy extends GameObject{
 	
 	private Random rng;
 	
+	private int life;
+	
 	private int leftWall, rightWall;
 
 	private long time;
@@ -32,6 +34,7 @@ public class Enemy extends GameObject{
 		isValid		= true;
 		moveRight	= true;
 		enter		= true;
+		life = 10;
 		
 		y = -200;
 		x = (int)GameParams.mapScreenX(50);
@@ -47,6 +50,8 @@ public class Enemy extends GameObject{
 	}
 	
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta, Player player){	
+		if(life<=0)
+			setIsValid(false);
 		
 		leftWall	= (int)player.getBox().getCenterX()-GameParams.screenX/7;
 		
@@ -63,9 +68,11 @@ public class Enemy extends GameObject{
 			if(cont==20){
 				cont=0;
 			}
-		
-			if(y >= GameParams.mapScreenY(15))
+
+			if(y >= GameParams.mapScreenY(15)){
+				System.out.println("HP remaining: "+life);
 				enter=false;
+			}
 		}else{
 			boundBox = new Rectangle(x,y,w,h);
 			loversArival(gameContainer, sbGame, delta, player);
@@ -95,7 +102,7 @@ public class Enemy extends GameObject{
 			deltaTime = System.currentTimeMillis() - time;
 			if(deltaTime > 500){
 				time = System.currentTimeMillis();
-				//TODO
+
 			}		
 
 	}
@@ -111,6 +118,14 @@ public class Enemy extends GameObject{
 		return isValid;
 	}
 
+	public void onHit(){
+		life--;
+	}
+	
+	public int getLife(){
+		return life;
+	}
+	
 	public Shoot getShoot() {
 		return new Shoot(boundBox.getX()-boundBox.getWidth()/2+GameParams.screenX/200,boundBox.getY()+h,true);
 	}
