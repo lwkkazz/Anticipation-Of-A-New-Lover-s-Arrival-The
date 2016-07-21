@@ -30,7 +30,7 @@ public class GameOver extends BasicGameState {
 		start	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(50),(GameParams.screenY/10)*2,GameParams.screenY/20);
 		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
 
-		gameOver = new Image("/res/game_over.png");
+		gameOver = new Image("/res/image/game_over.png");
 		Mouse.updateCursor();
 	}
 	
