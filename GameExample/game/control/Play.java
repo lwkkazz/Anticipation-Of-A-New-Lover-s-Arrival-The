@@ -34,7 +34,7 @@ public class Play extends BasicGameState{
 	
 	int valor =0;
 
-	private boolean bossFight=true;
+	private boolean bossFight;
 
 	private long bossDeltaTime;
 
@@ -54,6 +54,8 @@ public class Play extends BasicGameState{
 		bossShoots	= Collections.synchronizedList(new ArrayList<Shoot>());
 
 		bossDeltaTime = astroMark = time = System.currentTimeMillis();
+		
+		bossFight = true;
 		
 		lvl = new LevelOne();
 		bossTimer = System.currentTimeMillis();
@@ -102,17 +104,29 @@ public class Play extends BasicGameState{
 		bossShotTimer = System.currentTimeMillis() - bossDeltaTime;
 		if(bossShotTimer > 300){
 			bossDeltaTime = System.currentTimeMillis();
-			
 			bossShoots.add(boss.getShoot());
-		}
-			
+		}		
 	}
 
-	private void checkCollisions(GameContainer gameContainer, StateBasedGame sbGame, int delta) {
+	private void checkCollisions(GameContainer gameContainer, StateBasedGame sbGame, int delta) 
+			throws SlickException {
 
 		for(Shoot tiro:bossShoots){
-			tiro.update(gameContainer, sbGame, delta);
+			if(tiro.getBox().getY()<=GameParams.screenY-1){
+				tiro.update(gameContainer, sbGame, delta);
+			}else{
+				tiro.setIsValid(false);
+			}
+			
+			if(GameParams.trigger(player, tiro)){
+				
+				bossTimer = System.currentTimeMillis();
+				boss = null;
+				sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
+				sbGame.enterState(GameParams.gameOver);
+			}
 		}
+		
 		
 		for(Asteroid aero:astro){
 			if(aero.getBox().getY()<=GameParams.screenY-1){
@@ -122,8 +136,12 @@ public class Play extends BasicGameState{
 			}
 			
 			if(GameParams.trigger(player, aero)){
-				//System.exit(0);
-				//sbGame.enterState(GameParams.menu);
+				
+				bossTimer = System.currentTimeMillis();
+				boss = null;
+				sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
+				sbGame.enterState(GameParams.gameOver);
+				
 			}
 		}
 		
@@ -207,7 +225,18 @@ public class Play extends BasicGameState{
 					i.remove();
 				}
 			}
-		}	
+		}
+		
+		synchronized(bossShoots){
+			Iterator<Shoot> i = bossShoots.iterator();
+			while(i.hasNext()){
+				Shoot bossShoots =  i.next();
+				if(!bossShoots.isValid()){
+					i.remove();
+				}
+			}
+		}
+		
 	}
 	
 	@Override

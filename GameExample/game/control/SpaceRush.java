@@ -9,9 +9,10 @@ public class SpaceRush extends StateBasedGame {
 		super(gameName);
 		this.addState(new Menu(GameParams.menu));
 		this.addState(new Play(GameParams.play));
+		this.addState(new GameOver(GameParams.gameOver));
 
 	}
-
+	
 	public static void main(String[] args) {
 		AppGameContainer appGameContainer;
 		
@@ -31,6 +32,7 @@ public class SpaceRush extends StateBasedGame {
 	public void initStatesList(GameContainer gameContainer) throws SlickException {
 		this.getState(GameParams.menu).init(gameContainer, this);
 		this.getState(GameParams.play).init(gameContainer, this);
+		this.getState(GameParams.gameOver).init(gameContainer, this);
 		this.enterState(GameParams.menu);
 	}
 }

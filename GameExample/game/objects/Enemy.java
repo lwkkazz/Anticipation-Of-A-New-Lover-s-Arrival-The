@@ -108,7 +108,7 @@ public class Enemy extends GameObject{
 		isValid = value;
 	}		
 	public boolean isValid(){
-		return false;
+		return isValid;
 	}
 
 	public Shoot getShoot() {

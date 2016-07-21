@@ -1,25 +1,27 @@
 package game.control;
 
-import org.newdawn.slick.*;
+import org.lwjgl.input.Mouse;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.state.*;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
-import org.lwjgl.input.*;
 
 
-//@lwkkazz
-public class Menu extends BasicGameState{
+public class GameOver extends BasicGameState {
 	
 	private Rectangle start, exit;
-	
-	private Image titleText;
-	
+		
 	private int mX, mY;
 		
 	private int mouseEvent;
-		
 	
-	public Menu(int state){
+	private Image gameOver;
+	
+	public GameOver(int state){
 	}
 
 	@Override
@@ -28,20 +30,20 @@ public class Menu extends BasicGameState{
 		start	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(50),(GameParams.screenY/10)*2,GameParams.screenY/20);
 		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
 
-		titleText = new Image("/res/titletext.png");
+		gameOver = new Image("/res/game_over.png");
+		Mouse.updateCursor();
 	}
 	
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
 
-		graph.drawString("Space Rush", GameParams.mapScreenX(48), GameParams.mapScreenY(30));
+		graph.drawImage(gameOver, GameParams.mapScreenX(33), GameParams.mapScreenY(30));
 		graph.draw(start);
-		graph.drawString("Start Game!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
+		graph.drawString("Start again!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
 		graph.draw(exit);
 		graph.drawString("Exit", GameParams.mapScreenX(52), GameParams.mapScreenY(61));
 
-		
 		graph.drawString("X: "+mX+"| Y: "+mY, GameParams.mapScreenX(10), GameParams.mapScreenY(10));
 	}
 
@@ -55,23 +57,22 @@ public class Menu extends BasicGameState{
 		checkClick(gameContainer, sbGame);
 	}
 
-	public void checkClick(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException{		
+	public void checkClick(GameContainer gameContainer, StateBasedGame sbGame)  throws SlickException {		
 		if(start.contains(mX, mY)){
 			if(mouseEvent==0){
 				Mouse.setCursorPosition(0, GameParams.screenY);
 				sbGame.getState(GameParams.play).init(gameContainer, sbGame);
 				sbGame.enterState(GameParams.play);
 			}
-			
 		}if(exit.contains(mX, mY)){
 			if(mouseEvent==0){
 				System.exit(0);
 			}
 		}
 	}
-	
+
 	@Override
 	public int getID() {
-		return 0;
+		return 2;
 	}
 }
