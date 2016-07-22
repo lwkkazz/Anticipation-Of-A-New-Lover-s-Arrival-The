@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
-import game.levels.LevelOne;
+import game.levels.Level;
 import game.objects.Asteroid;
 import game.objects.Enemy;
 import game.objects.Player;
@@ -21,12 +22,13 @@ public class Play extends BasicGameState{
 	
 	private long time, deltaTime, astroTime, astroMark, bossTimer;
 	
-	private LevelOne lvl;
+	private Level lvl;
 	
 	private List<Asteroid> astro;
 	private List<Shoot> shoots;
 	private List<Shoot> bossShoots;
 
+	private Random rng;
 	
 	private Player player;
 		
@@ -40,7 +42,13 @@ public class Play extends BasicGameState{
 
 	private long bossShotTimer;
 
-	private boolean astroImune = false;
+	private boolean astroImune;
+
+	private int pattern;
+
+	private int masterCont;
+
+	private boolean callBoss;
 	
 	public Play(int state){
 	}
@@ -58,8 +66,14 @@ public class Play extends BasicGameState{
 		bossDeltaTime = astroMark = time = System.currentTimeMillis();
 		
 		bossFight = true;
+		astroImune = false;
+		callBoss = false;
+				
+		rng = new Random();
 		
-		lvl = new LevelOne();
+		pattern = rng.nextInt(3);
+		
+		lvl = new Level();
 		bossTimer = System.currentTimeMillis();
 	}
 
@@ -81,13 +95,17 @@ public class Play extends BasicGameState{
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
-				
-		if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
+		if(!(boss==null))
+			System.out.println("Y: "+boss.getBox().getY());
+		
+		if(!callBoss){
 			generateAstros();
 		}else{
-			while(bossFight){
-			boss = new Enemy();
-			bossFight = false;
+			if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
+				while(bossFight){
+					boss = new Enemy();
+					bossFight = false;
+				}
 			}
 		}
 
@@ -173,21 +191,29 @@ public class Play extends BasicGameState{
 
 	private void generateAstros() {
 		astroTime = System.currentTimeMillis() - astroMark;
-		
 		if(astroTime > GameParams.spawnRate){
 			astroMark = System.currentTimeMillis();
-			int[][] temp = lvl.getLevel();
+			int[][][] temp = lvl.getLevel();
 			
-			if(cont>=temp.length)
+			if(cont>=temp.length){
+				
 				cont = 0;
+				masterCont++;
+				
+				pattern = rng.nextInt(2);
+				
+				if(masterCont==3){
+					callBoss = true;
+				}
+			}
 			
-			for(int i=0; i < temp[cont].length; i ++){
-				if(temp[cont][i]==1)
+			for(int i=0; i < temp[0][cont].length; i ++){
+				if(temp[pattern][cont][i]==1)
 					astro.add(new Asteroid(i*10));
 			}
+			System.out.println("Pattern: "+pattern+" | Master Cont:"+masterCont+" | Cont: "+cont);
 			cont++;
 		}
-		
 	}
 
 	private void getInput(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException{

@@ -34,7 +34,7 @@ public class Enemy extends GameObject{
 		isValid		= true;
 		moveRight	= true;
 		enter		= true;
-		life = 10;
+		life = 1;
 		
 		y = -200;
 		x = (int)GameParams.mapScreenX(50);

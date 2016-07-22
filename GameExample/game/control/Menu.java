@@ -28,7 +28,7 @@ public class Menu extends BasicGameState{
 		start	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(50),(GameParams.screenY/10)*2,GameParams.screenY/20);
 		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
 
-		titleText = new Image("/res/image/title_text.png");
+		titleText = new Image("/res/title_text.png");
 	}
 	
 
