@@ -10,6 +10,7 @@ public class SpaceRush extends StateBasedGame {
 		this.addState(new Menu(GameParams.menu));
 		this.addState(new Play(GameParams.play));
 		this.addState(new GameOver(GameParams.gameOver));
+		this.addState(new Finish(GameParams.gameWin));
 
 	}
 	
@@ -18,11 +19,11 @@ public class SpaceRush extends StateBasedGame {
 		
 		try{
 			appGameContainer = new AppGameContainer(new SpaceRush(GameParams.gameName));
-			appGameContainer.setDisplayMode(GameParams.screenX, GameParams.screenY, false);
+			appGameContainer.setDisplayMode(GameParams.screenX, GameParams.screenY, false);			
+
+			//appGameContainer.setFullscreen(true);
+			
 			appGameContainer.start();
-			appGameContainer.setVSync(true);
-			appGameContainer.setTargetFrameRate(60);
-			appGameContainer.setMaximumLogicUpdateInterval(10);
 		}catch(SlickException err){
 			err.printStackTrace();
 		}		

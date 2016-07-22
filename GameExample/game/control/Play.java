@@ -22,6 +22,9 @@ public class Play extends BasicGameState{
 	private List<Shoot> shoots;
 	private List<Shoot> bossShoots;
 
+	private Sound shootSound;
+	private Sound bossDeathSound;
+	
 	private Level lvl;
 	private Random rng;
 	private Player player;
@@ -55,6 +58,9 @@ public class Play extends BasicGameState{
 		shoots		= Collections.synchronizedList(new ArrayList<Shoot>());
 		astro		= Collections.synchronizedList(new ArrayList<Asteroid>());
 		bossShoots	= Collections.synchronizedList(new ArrayList<Shoot>());
+		
+		shootSound		= new Sound("/res/shoot1.wav");
+		bossDeathSound		= new Sound("/res/shoot2.wav");
 		
 		lvl		= new Level();
 		rng		= new Random();
@@ -263,6 +269,7 @@ public class Play extends BasicGameState{
 			deltaTime = System.currentTimeMillis() - time;
 			if(deltaTime > GameParams.shootRate){
 				time = System.currentTimeMillis();
+				shootSound.play(10f,0.3f);
 				shoots.add(new Shoot(player.getX()-player.getBox().getWidth()/2+GameParams.screenX/200,player.getY()));
 			}		
 		}
@@ -301,6 +308,7 @@ public class Play extends BasicGameState{
 		
 		if(!(boss==null)){
 			if(!boss.isValid()){
+				bossDeathSound.play(0.1f, 1f);
 				boss=null;
 				finishGame=true;
 			}
