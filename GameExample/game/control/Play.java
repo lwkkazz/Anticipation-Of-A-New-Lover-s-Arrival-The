@@ -132,14 +132,14 @@ public class Play extends BasicGameState{
 			boss = null;
 			finishGame = false;
 			GameParams.score = score;
-			sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
-			sbGame.enterState(GameParams.gameOver);
+			sbGame.getState(GameParams.gameWin).init(gameContainer, sbGame);
+			sbGame.enterState(GameParams.gameWin);
 		}
 	}
 
 	private void bossShots() {
 		bossShotTimer = System.currentTimeMillis() - bossDeltaTime;
-		if(bossShotTimer > 300){
+		if(bossShotTimer > GameParams.bossShotTimer){
 			bossDeltaTime = System.currentTimeMillis();
 			bossShoots.add(boss.getShoot());
 		}		
@@ -193,7 +193,7 @@ public class Play extends BasicGameState{
 			}			
 			for(Asteroid aero:astro){
 				if(GameParams.trigger(tiro, aero)){
-					score += 10;
+					score += GameParams.astroScore;
 					tiro.setIsValid(false);
 					aero.setIsValid(false);
 				}
@@ -225,7 +225,7 @@ public class Play extends BasicGameState{
 			
 			for(int i=0; i < temp[0][cont].length; i ++){
 				if(temp[pattern][cont][i]==1)
-					astro.add(new Asteroid(i*10));
+					astro.add(new Asteroid(i*GameParams.astroOffset));
 			}
 			cont++;
 		}
@@ -245,10 +245,12 @@ public class Play extends BasicGameState{
 			player.move(Keyboard.KEY_RIGHT);
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+			if(GameParams.debug)
 				astroImune=true;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_B)){
-			callBoss=true;
+			if(GameParams.debug)
+				callBoss=true;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 			bossTimer = System.currentTimeMillis();
@@ -307,6 +309,6 @@ public class Play extends BasicGameState{
 	
 	@Override
 	public int getID() {
-		return 1;
+		return GameParams.play;
 	}
 }

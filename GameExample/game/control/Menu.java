@@ -18,8 +18,11 @@ public class Menu extends BasicGameState{
 		
 	private int mouseEvent;
 		
+	private boolean[] code = new boolean[6];// = {false,false,false,false,false,false};
 	
 	public Menu(int state){
+		for(int i=0;i<code.length;i++)
+			code[i]=false;
 	}
 
 	@Override
@@ -41,8 +44,8 @@ public class Menu extends BasicGameState{
 		graph.draw(exit);
 		graph.drawString("Exit", GameParams.mapScreenX(52), GameParams.mapScreenY(61));
 
-		
-		graph.drawString("X: "+mX+"| Y: "+mY, GameParams.mapScreenX(10), GameParams.mapScreenY(10));
+		if(GameParams.debug)
+			graph.drawString("X: "+mX+"| Y: "+mY+" DEBUG", GameParams.mapScreenX(10), GameParams.mapScreenY(10));
 	}
 
 	@Override
@@ -53,6 +56,48 @@ public class Menu extends BasicGameState{
 		mY = GameParams.screenY-Mouse.getY();
 		
 		checkClick(gameContainer, sbGame);
+		getInput(gameContainer, sbGame);
+	}
+
+	private void getInput(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException{
+		if(Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
+			Mouse.setCursorPosition(0, GameParams.screenY);
+			sbGame.getState(GameParams.play).init(gameContainer, sbGame);
+			sbGame.enterState(GameParams.play);
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+			System.exit(0);
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+			code[0] = true;
+		}
+		if(code[0]){
+			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+				code[1]=true;
+			}
+		}
+		if(code[1]){
+			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
+				code[2]=true;
+			}
+		}
+		if(code[2]){
+			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+				code[3]=true;
+			}
+		}
+		if(code[3]){
+			if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+				code[4]=true;
+			}
+		}
+		if(code[4]){
+			if(Keyboard.isKeyDown(Keyboard.KEY_A)){
+				code[5]=true;
+			}
+		}if(code[5])
+			GameParams.debug=true;
+		
 	}
 
 	public void checkClick(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException{		
@@ -72,6 +117,6 @@ public class Menu extends BasicGameState{
 	
 	@Override
 	public int getID() {
-		return 0;
+		return GameParams.menu;
 	}
 }

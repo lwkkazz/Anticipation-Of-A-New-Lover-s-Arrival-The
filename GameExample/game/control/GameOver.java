@@ -1,5 +1,6 @@
 package game.control;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -56,6 +57,18 @@ public class GameOver extends BasicGameState {
 		mY = GameParams.screenY-Mouse.getY();
 		
 		checkClick(gameContainer, sbGame);
+		getInput(gameContainer, sbGame);
+	}
+
+	private void getInput(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException{
+		if(Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
+			Mouse.setCursorPosition(0, GameParams.screenY);
+			sbGame.getState(GameParams.play).init(gameContainer, sbGame);
+			sbGame.enterState(GameParams.play);
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+			System.exit(0);
+		}
 	}
 
 	public void checkClick(GameContainer gameContainer, StateBasedGame sbGame)  throws SlickException {		
@@ -74,6 +87,6 @@ public class GameOver extends BasicGameState {
 
 	@Override
 	public int getID() {
-		return 2;
+		return GameParams.gameOver;
 	}
 }
