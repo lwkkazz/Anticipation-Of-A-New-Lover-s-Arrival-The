@@ -4,7 +4,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import game.objects.GameObject;
 
-public final class GameParams {
+public class GameParams {
 	public static final String	gameName 	= "Space Rush!";
 	
 	public static final int		menu		= 0;
@@ -17,11 +17,15 @@ public final class GameParams {
 	public static final int		shootRate	= 500;
 	public static final int		shootSpeed	= 2; //Less is faster
 	
+	public static final int		finish		= 42;
+	
 	public static final int		bossTime	= 1000;
 
 	public static final int		spawnRate	= 400;
 
 	public static final int		moveSpeed	= GameParams.screenY/500;
+	
+	public static int			score = 0;
 	
 	public static float mapScreenY(int value){
 		if((value>=0)&&(value<=100))

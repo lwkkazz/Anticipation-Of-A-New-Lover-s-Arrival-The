@@ -13,6 +13,10 @@ public class Player extends GameObject {
 	private int x, y, w, h, delta;
 	
 	private Rectangle boundBox;
+
+	private int cont;
+
+	private int auxCont;
 	
 	public Player(int x, int y){
 		
@@ -21,6 +25,8 @@ public class Player extends GameObject {
 		
 		w = GameParams.screenX/100;
 		h = w*2;
+		
+		cont = auxCont = 0;
 		
 		boundBox = new Rectangle(x,y,w,h);
 	}
@@ -56,6 +62,28 @@ public class Player extends GameObject {
 			case Keyboard.KEY_RIGHT:
 				if(x<GameParams.screenX-w)
 					x += GameParams.moveSpeed*delta;
+				break;
+				
+			case GameParams.finish:
+					
+				if(cont==7){
+					y-= (GameParams.moveSpeed)*delta;
+					cont=0;
+				}
+				cont++;
+					if(boundBox.getCenterX()>GameParams.mapScreenX(50)){
+						if(auxCont==4){
+							x--;
+							auxCont=0;
+						}
+						auxCont++;
+					}else if(boundBox.getCenterX()<GameParams.mapScreenX(50)){
+						if(auxCont==4){
+							x++;
+							auxCont=0;
+						}
+						auxCont++;
+					}
 				break;
 	
 		}

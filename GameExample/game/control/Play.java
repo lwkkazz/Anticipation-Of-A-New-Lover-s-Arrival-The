@@ -17,38 +17,34 @@ import game.objects.Player;
 import game.objects.Shoot;
 
 public class Play extends BasicGameState{
-
-	private int cont=0;
-	
-	private long time, deltaTime, astroTime, astroMark, bossTimer;
-	
-	private Level lvl;
-	
+		
 	private List<Asteroid> astro;
 	private List<Shoot> shoots;
 	private List<Shoot> bossShoots;
 
+	private Level lvl;
 	private Random rng;
-	
 	private Player player;
-		
 	private Enemy boss;
 	
-	int valor =0;
-
-	private boolean bossFight;
-
 	private long bossDeltaTime;
-
 	private long bossShotTimer;
+	private long time;
+	private long deltaTime;
+	private long astroTime;
+	private long astroMark;
+	private long bossTimer;
 
-	private boolean astroImune;
 
 	private int pattern;
-
+	private int cont;
 	private int masterCont;
+	private int score;
 
+	private boolean astroImune;
+	private boolean bossFight;
 	private boolean callBoss;
+	private boolean finishGame;
 	
 	public Play(int state){
 	}
@@ -56,29 +52,35 @@ public class Play extends BasicGameState{
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException {
 
-		player = new Player((int) GameParams.mapScreenX(50), (int) GameParams.mapScreenX(50));
-		Keyboard.enableRepeatEvents(false);
-		
 		shoots		= Collections.synchronizedList(new ArrayList<Shoot>());
 		astro		= Collections.synchronizedList(new ArrayList<Asteroid>());
 		bossShoots	= Collections.synchronizedList(new ArrayList<Shoot>());
+		
+		lvl		= new Level();
+		rng		= new Random();
+		player	= new Player((int) GameParams.mapScreenX(50), (int) GameParams.mapScreenX(50));
+		
+		bossDeltaTime	= System.currentTimeMillis();
+		astroMark		= System.currentTimeMillis();
+		time			= System.currentTimeMillis();
+		bossTimer		= System.currentTimeMillis();
 
-		bossDeltaTime = astroMark = time = System.currentTimeMillis();
+		GameParams.score	= 0;
+		score				= 0;
+		cont				= 0;
 		
 		bossFight = true;
 		astroImune = false;
-		callBoss = false;
-				
-		rng = new Random();
+		callBoss = false;		
 		
-		pattern = rng.nextInt(3);
+		pattern = rng.nextInt(lvl.getPatternSize());
 		
-		lvl = new Level();
-		bossTimer = System.currentTimeMillis();
 	}
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
+		graph.drawString("SCORE: "+score, GameParams.mapScreenX(90), GameParams.mapScreenY(10));
+		
 		player.render(gameContainer, sbGame, graph);
 		
 		if(boss!=null){
@@ -95,31 +97,46 @@ public class Play extends BasicGameState{
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame sbGame, int delta) throws SlickException {
-		if(!(boss==null))
-			System.out.println("Y: "+boss.getBox().getY());
+		player.update(gameContainer, sbGame, delta);
 		
 		if(!callBoss){
 			generateAstros();
-		}else{
-			if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
-				while(bossFight){
-					boss = new Enemy();
-					bossFight = false;
-				}
+			bossTimer = System.currentTimeMillis();
+		}else if(System.currentTimeMillis()-bossTimer<GameParams.bossTime){
+			while(bossFight){
+				boss = new Enemy();
+				bossFight = false;
 			}
 		}
-
-		player.update(gameContainer, sbGame, delta);
 		
 		if(boss!=null){
-			boss.update(gameContainer, sbGame, delta, player);
+			boss.update(gameContainer, sbGame, delta, player);			
 			bossShots();
 		}
-		getInput(gameContainer, sbGame);
+		
 		checkCollisions(gameContainer, sbGame, delta);
 		performRemoves();
+		
+		if(!finishGame){
+			getInput(gameContainer, sbGame);
+		}else{
+			finishThis(gameContainer, sbGame);
+		}
 	}
 	
+	private void finishThis(GameContainer gameContainer, StateBasedGame sbGame) throws SlickException {
+		if(player.getBox().getY()>=0){
+			player.move(GameParams.finish);
+		}else{
+			bossTimer = System.currentTimeMillis();
+			boss = null;
+			finishGame = false;
+			GameParams.score = score;
+			sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
+			sbGame.enterState(GameParams.gameOver);
+		}
+	}
+
 	private void bossShots() {
 		bossShotTimer = System.currentTimeMillis() - bossDeltaTime;
 		if(bossShotTimer > 300){
@@ -130,7 +147,7 @@ public class Play extends BasicGameState{
 
 	private void checkCollisions(GameContainer gameContainer, StateBasedGame sbGame, int delta) 
 			throws SlickException {
-
+		
 		for(Shoot tiro:bossShoots){
 			if(tiro.getBox().getY()<=GameParams.screenY-1){
 				tiro.update(gameContainer, sbGame, delta);
@@ -139,13 +156,15 @@ public class Play extends BasicGameState{
 			}
 			if(GameParams.trigger(player, tiro)){
 				//Check for boss shoots on player
-				bossTimer = System.currentTimeMillis();
-				boss = null;
-				sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
-				sbGame.enterState(GameParams.gameOver);
+				if(!astroImune){
+					bossTimer = System.currentTimeMillis();
+					boss = null;
+					GameParams.score = score;
+					sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
+					sbGame.enterState(GameParams.gameOver);
+				}
 			}
 		}
-		
 		
 		for(Asteroid aero:astro){
 			if(aero.getBox().getY()<=GameParams.screenY-1){
@@ -159,34 +178,34 @@ public class Play extends BasicGameState{
 				if(!astroImune ){
 					bossTimer = System.currentTimeMillis();
 					boss = null;
+					GameParams.score = score;
 					sbGame.getState(GameParams.gameOver).init(gameContainer, sbGame);
 					sbGame.enterState(GameParams.gameOver);
 				}
 			}
 		}
 		
-			for(Shoot tiro:shoots){
-					if(tiro.getBox().getY()>0){
-						tiro.update(gameContainer, sbGame, delta);
-					}else{
-						tiro.setIsValid(false);
-					}			
-				for(Asteroid aero:astro){
-
-					if(GameParams.trigger(tiro, aero)){
-						tiro.setIsValid(false);
-						aero.setIsValid(false);
-					}
+		for(Shoot tiro:shoots){
+			if(tiro.getBox().getY()>0){
+				tiro.update(gameContainer, sbGame, delta);
+			}else{
+				tiro.setIsValid(false);
+			}			
+			for(Asteroid aero:astro){
+				if(GameParams.trigger(tiro, aero)){
+					score += 10;
+					tiro.setIsValid(false);
+					aero.setIsValid(false);
 				}
-				if(!(boss==null)){
-					if(GameParams.trigger(tiro, boss)){
-						//Check for player shoots on boss
-						tiro.setIsValid(false);
-						boss.onHit();
-						System.out.println("HIT! Life remaining "+boss.getLife());
-					}
+			}
+			if(!(boss==null)){
+				if(GameParams.trigger(tiro, boss)){
+					//Check for player shoots on boss
+					tiro.setIsValid(false);
+					boss.onHit();
 				}
-			}		
+			}
+		}		
 	}
 
 	private void generateAstros() {
@@ -195,14 +214,11 @@ public class Play extends BasicGameState{
 			astroMark = System.currentTimeMillis();
 			int[][][] temp = lvl.getLevel();
 			
-			if(cont>=temp.length){
-				
+			if(cont>=temp[0].length){
 				cont = 0;
 				masterCont++;
-				
-				pattern = rng.nextInt(2);
-				
-				if(masterCont==3){
+				pattern = rng.nextInt(lvl.getPatternSize());
+				if(masterCont==temp.length){
 					callBoss = true;
 				}
 			}
@@ -211,7 +227,6 @@ public class Play extends BasicGameState{
 				if(temp[pattern][cont][i]==1)
 					astro.add(new Asteroid(i*10));
 			}
-			System.out.println("Pattern: "+pattern+" | Master Cont:"+masterCont+" | Cont: "+cont);
 			cont++;
 		}
 	}
@@ -232,13 +247,16 @@ public class Play extends BasicGameState{
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
 				astroImune=true;
 		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_B)){
+			callBoss=true;
+		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
 			bossTimer = System.currentTimeMillis();
 			boss = null;
+			GameParams.score = score;
 			sbGame.getState(GameParams.menu).init(gameContainer, sbGame);
 			sbGame.enterState(GameParams.menu);		
 		}
-		
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
 			deltaTime = System.currentTimeMillis() - time;
 			if(deltaTime > GameParams.shootRate){
@@ -282,6 +300,7 @@ public class Play extends BasicGameState{
 		if(!(boss==null)){
 			if(!boss.isValid()){
 				boss=null;
+				finishGame=true;
 			}
 		}
 	}

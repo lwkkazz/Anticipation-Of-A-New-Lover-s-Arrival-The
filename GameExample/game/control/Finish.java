@@ -8,18 +8,18 @@ import org.lwjgl.input.*;
 
 
 //@lwkkazz
-public class Menu extends BasicGameState{
+public class Finish extends BasicGameState{
 	
 	private Rectangle start, exit;
 	
-	private Image titleText;
+	private Image winText;
 	
 	private int mX, mY;
 		
 	private int mouseEvent;
 		
 	
-	public Menu(int state){
+	public Finish(int state){
 	}
 
 	@Override
@@ -28,16 +28,17 @@ public class Menu extends BasicGameState{
 		start	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(50),(GameParams.screenY/10)*2,GameParams.screenY/20);
 		exit	= new Rectangle(GameParams.mapScreenX(50)-GameParams.screenX/40,GameParams.mapScreenY(60),(GameParams.screenY/10)*2,GameParams.screenY/20);
 
-		titleText = new Image("/res/title_text.png");
+		winText = new Image("/res/win_text.png");
 	}
 	
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
 
-		graph.drawImage(titleText, GameParams.mapScreenX(33), GameParams.mapScreenY(30));
+		graph.drawImage(winText, GameParams.mapScreenX(33), GameParams.mapScreenY(25));
+		graph.drawString("Score: "+GameParams.score, GameParams.mapScreenX(48), GameParams.mapScreenY(40));
 		graph.draw(start);
-		graph.drawString("Start game!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
+		graph.drawString("Play again!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
 		graph.draw(exit);
 		graph.drawString("Exit", GameParams.mapScreenX(52), GameParams.mapScreenY(61));
 
@@ -72,6 +73,6 @@ public class Menu extends BasicGameState{
 	
 	@Override
 	public int getID() {
-		return 0;
+		return 3;
 	}
 }

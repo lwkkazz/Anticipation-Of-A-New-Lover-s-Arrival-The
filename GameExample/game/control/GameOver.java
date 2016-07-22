@@ -38,7 +38,8 @@ public class GameOver extends BasicGameState {
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame sbGame, Graphics graph) throws SlickException {
 
-		graph.drawImage(gameOver, GameParams.mapScreenX(33), GameParams.mapScreenY(30));
+		graph.drawImage(gameOver, GameParams.mapScreenX(33), GameParams.mapScreenY(25));
+		graph.drawString("Score: "+GameParams.score, GameParams.mapScreenX(48), GameParams.mapScreenY(40));
 		graph.draw(start);
 		graph.drawString("Start again!", GameParams.mapScreenX(49), GameParams.mapScreenY(51));
 		graph.draw(exit);
